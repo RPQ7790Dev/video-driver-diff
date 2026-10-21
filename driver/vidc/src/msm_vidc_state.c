@@ -52,7 +52,7 @@ const char *core_state_name(enum msm_vidc_core_state state)
 exit:
 	return name;
 }
-
+#if PRINTK_INFO_EN
 static const char * const event_name_arr[] =
 	FOREACH_EVENT(GENERATE_STRING);
 
@@ -68,7 +68,7 @@ static const char *event_name(enum msm_vidc_event event)
 exit:
 	return name;
 }
-
+#endif
 static int __strict_inst_check(struct msm_vidc_inst *inst, const char *function)
 {
 	bool fatal = !mutex_is_locked(&inst->lock);
@@ -682,11 +682,13 @@ static int msm_vidc_open_state(struct msm_vidc_inst *inst,
 	}
 	case MSM_VIDC_STREAMOFF:
 	{
+#if PRINTK_INFO_EN
 		struct vb2_queue *q = (struct vb2_queue *)data;
 
 		/* ignore streamoff request in open state */
 		i_vpr_h(inst, "%s: streamoff of (%s) ignored in state (%s)\n",
 			__func__, v4l2_type_name(q->type), state_name(inst->state));
+#endif
 		break;
 	}
 	case MSM_VIDC_CMD_START:
